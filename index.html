@@ -27,7 +27,7 @@
         <div class="col-lg-6 offset-lg-3">
           <form action="">
             <fieldset
-              class="d-flex flex-column gap-3 container border rounded-3 py-3">
+              class="d-flex flex-column gap-3 container border shadow rounded-3 py-3">
               <div class="row">
                 <div>
                   <legend>Add a new product to your cart</legend>
@@ -76,12 +76,11 @@
       </div>
       <div class="row">
         <div class="col-lg-6 offset-lg-3">
-          <ul id="cart"></ul>
-          <h3>Total: $<span id="total-price">0.00</span></h3>
+          <ul id="cart" aria-live="polite" aria-relevant="all"></ul>
+          <h3>Total: <i class="bi bi-currency-dollar"></i><span id="total-price">0.00</span></h3>
         </div>
       </div>
     </div>
-
     <script src="script.js"></script>
   </body>
 </html>
