@@ -22,7 +22,7 @@ const shoppingCart = {
     product.domElement.remove()
     this.items.splice(this.items.indexOf(product), 1)
     product = null
-    this.updateDisplay()
+    // this.updateDisplay()
   },
   getTotalPrice: () => {
     const startingTotal = 0.0
