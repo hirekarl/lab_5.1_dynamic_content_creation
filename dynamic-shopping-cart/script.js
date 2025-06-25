@@ -27,10 +27,10 @@ const shoppingCart = {
   getTotalPrice: () => {
     const startingTotal = 0.0
     const sum = this.items.reduce(
-      (accumulator, product) => accumulator + product.price,
+      (accumulator, product) => accumulator + parseFloat(product.price),
       startingTotal
     )
-    return sum
+    return sum.toFixed(2)
   },
   updateDisplay: () => {
     // filter out products that already exist on the DOM
@@ -47,6 +47,9 @@ const shoppingCart = {
       this.domElement.appendChild(newProductsDocFrag)
     }
     // no else needed; products are already removed from DOM on this.removeProduct()
+
+    // update the total price
+    totalPriceSpan.textContent = this.getTotalPrice()
   },
 }
 
