@@ -36,7 +36,7 @@ const shoppingCart = {
     // filter out products that already exist on the DOM
     const newProducts = this.items.filter(
       (product) =>
-        !this.domElement.children
+        !Array.from(this.domElement.children)
           .map((child) => child.name.textContent)
           .contains(product.name)
     )
