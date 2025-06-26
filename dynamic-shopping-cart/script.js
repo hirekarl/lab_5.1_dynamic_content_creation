@@ -1,4 +1,5 @@
 const form = document.getElementById("form")
+const shoppingCartUl = document.getElementById("cart")
 // const productNameInput = document.getElementById("product-name")
 // const productPriceInput = document.getElementById("product-price")
 // const addProductButton = document.getElementById("add-product")
@@ -7,7 +8,7 @@ const totalPriceSpan = document.getElementById("total-price")
 
 const shoppingCart = {
   items: [],
-  domElement: document.getElementById("cart"),
+  domElement: shoppingCartUl,
   addProduct: function (nameString, priceNumber) {
     let product = new Product(nameString, priceNumber)
     if (!product.validate()) {
@@ -23,7 +24,10 @@ const shoppingCart = {
     product.domElement.remove()
     this.items.splice(this.items.indexOf(product), 1)
     product = null
-    // this.updateDisplay()
+    this.updateDisplay()
+  },
+  getProductById: function(productId) {
+    return this.items.find((product) => productId === product.id)
   },
   getTotalPrice: function () {
     const startingTotal = 0.0
@@ -55,7 +59,11 @@ const shoppingCart = {
 }
 
 class Product {
+
+  static nextId = 0
+
   constructor(nameString, priceNumber) {
+    this.id = Product.nextId++
     this.name = nameString
     this.price = priceNumber
     this.quantity = 1
@@ -80,6 +88,7 @@ class Product {
 
   createHTML() {
     const productListItem = document.createElement("li")
+    productListItem.dataset.id = this.id
     this.domElement = productListItem
 
     productListItem.classList.add(
@@ -171,5 +180,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     shoppingCart.addProduct(productName, productPrice)
     form.reset()
+  })
+
+  shoppingCartUl.addEventListener("click", (event) => {
+    if (event.target.classList.contains("product-remove-button")) {
+      const shoppingCartListItem = event.target.closest("li")
+      const productId = parseInt(shoppingCartListItem.dataset.id)
+      const product = shoppingCart.getProductById(productId)
+      shoppingCart.removeProduct(product)
+    }
   })
 })
