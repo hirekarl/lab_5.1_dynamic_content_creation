@@ -34,11 +34,11 @@ const shoppingCart = {
   },
   updateDisplay: () => {
     // filter out products that already exist on the DOM
+    const existingProductNames = Array.from(this.domElement.children).map(
+      (child) => child.name.textContent
+    )
     const newProducts = this.items.filter(
-      (product) =>
-        !Array.from(this.domElement.children)
-          .map((child) => child.name.textContent)
-          .contains(product.name)
+      (product) => !existingProductNames.contains(product.name)
     )
     // if there are new products, append them as children to this.domElement
     if (newProducts) {
