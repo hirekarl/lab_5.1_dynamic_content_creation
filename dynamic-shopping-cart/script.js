@@ -26,32 +26,38 @@ const shoppingCart = {
     product = null
     this.updateDisplay()
   },
-  getProductById: function(productId) {
+  getProductById: function (productId) {
     return this.items.find((product) => productId === product.id)
   },
   getTotalPrice: function () {
     const startingTotal = 0.0
     const sum = this.items.reduce(
-      (accumulator, product) => accumulator + parseFloat(product.price),
+      (accumulator, product) =>
+        accumulator + parseFloat(product.getTotalPrice()),
       startingTotal
     )
     return sum.toFixed(2)
   },
   updateDisplay: function () {
+    // set decrement button for all products
+    this.items.forEach((product) => product.setDecrementButton())
+
     // filter out products that already exist on the DOM
-    const existingProductNames = Array.from(this.domElement
-      .querySelectorAll("product-name"))
-      .map((span) => span.textContent)
+    const existingProductNames = Array.from(
+      this.domElement.querySelectorAll("product-name")
+    ).map((span) => span.textContent)
     const newProducts = this.items.filter(
       (product) => !existingProductNames.includes(product.name)
     )
+
     // if there are new products, append them as children to this.domElement
     if (newProducts.length > 0) {
       const newProductsDocFrag = new DocumentFragment()
-      newProducts.forEach((product) => newProductsDocFrag.appendChild(product.domElement))
+      newProducts.forEach((product) =>
+        newProductsDocFrag.appendChild(product.domElement)
+      )
       this.domElement.appendChild(newProductsDocFrag)
     }
-    // no else needed; products are already removed from DOM on this.removeProduct()
 
     // update the total price
     totalPriceSpan.textContent = this.getTotalPrice()
@@ -59,7 +65,6 @@ const shoppingCart = {
 }
 
 class Product {
-
   static nextId = 0
 
   constructor(nameString, priceNumber) {
@@ -68,6 +73,46 @@ class Product {
     this.price = priceNumber
     this.quantity = 1
     this.domElement = null
+    this.quantitySpan = null
+    this.totalPriceSpan = null
+    this.decrementButton = null
+  }
+
+  setDecrementButton() {
+    if (this.quantity > 1) {
+      this.decrementButton.disabled = false
+    } else {
+      this.decrementButton.disabled = true
+    }
+  }
+
+  decrementQuantity() {
+    if (this.quantity > 1) {
+      this.quantity--
+
+      this.quantitySpan.textContent = this.quantity
+      this.totalPriceSpan.textContent = this.getTotalPrice()
+
+      shoppingCart.updateDisplay()
+    } else {
+      this.setDecrementButton()
+
+      shoppingCart.updateDisplay()
+    }
+  }
+
+  incrementQuantity() {
+    this.quantity++
+
+    this.quantitySpan.textContent = this.quantity
+    this.totalPriceSpan.textContent = this.getTotalPrice()
+
+    shoppingCart.updateDisplay()
+  }
+
+  getTotalPrice() {
+    const totalPrice = this.price * this.quantity
+    return totalPrice.toFixed(2)
   }
 
   validate() {
@@ -123,6 +168,34 @@ class Product {
     productPriceContainer.innerHTML += `$<span class="product-price">${this.price}</span>)`
     productLeftContainer.appendChild(productPriceContainer)
 
+    const productAdjustQuantityContainer = document.createElement("div")
+    productAdjustQuantityContainer.classList.add("btn-group")
+    productAdjustQuantityContainer.setAttribute("role", "group")
+    productLeftContainer.appendChild(productAdjustQuantityContainer)
+
+    const productDecrementQuantityButton = document.createElement("button")
+    productDecrementQuantityButton.setAttribute("type", "button")
+    productDecrementQuantityButton.setAttribute("disabled", "true")
+    productDecrementQuantityButton.classList.add(
+      "btn",
+      "btn-sm",
+      "btn-danger",
+      "decrement-quantity-button"
+    )
+    productDecrementQuantityButton.textContent = "-"
+    productAdjustQuantityContainer.appendChild(productDecrementQuantityButton)
+
+    const productIncrementQuantityButton = document.createElement("button")
+    productIncrementQuantityButton.setAttribute("type", "button")
+    productIncrementQuantityButton.classList.add(
+      "btn",
+      "btn-sm",
+      "btn-success",
+      "increment-quantity-button"
+    )
+    productIncrementQuantityButton.textContent = "+"
+    productAdjustQuantityContainer.appendChild(productIncrementQuantityButton)
+
     const productRightContainer = document.createElement("div")
     productRightContainer.classList.add(
       "d-flex",
@@ -136,7 +209,7 @@ class Product {
     productRightContainer.appendChild(productTotalContainer)
 
     const productTotalStrong = document.createElement("strong")
-    productTotalStrong.innerHTML = `$<span class="product-total-price">${this.price}</span>`
+    productTotalStrong.innerHTML = `$<span class="product-total-price">${this.getTotalPrice()}</span>`
     productTotalContainer.appendChild(productTotalStrong)
 
     const productRemoveButtonContainer = document.createElement("div")
@@ -150,6 +223,12 @@ class Product {
       "product-remove-button"
     )
     productRemoveButtonContainer.appendChild(productRemoveButton)
+
+    this.quantitySpan = productListItem.querySelector(".product-quantity")
+    this.totalPriceSpan = productListItem.querySelector(".product-total-price")
+    this.decrementButton = productListItem.querySelector(
+      ".decrement-quantity-button"
+    )
 
     return this.domElement
   }
@@ -183,11 +262,17 @@ document.addEventListener("DOMContentLoaded", () => {
   })
 
   shoppingCartUl.addEventListener("click", (event) => {
+    const shoppingCartListItem = event.target.closest("li")
+    const productId = parseInt(shoppingCartListItem.dataset.id)
+    const product = shoppingCart.getProductById(productId)
     if (event.target.classList.contains("product-remove-button")) {
-      const shoppingCartListItem = event.target.closest("li")
-      const productId = parseInt(shoppingCartListItem.dataset.id)
-      const product = shoppingCart.getProductById(productId)
       shoppingCart.removeProduct(product)
+    }
+    if (event.target.classList.contains("decrement-quantity-button")) {
+      product.decrementQuantity()
+    }
+    if (event.target.classList.contains("increment-quantity-button")) {
+      product.incrementQuantity()
     }
   })
 })

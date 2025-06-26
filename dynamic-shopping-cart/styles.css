@@ -29,3 +29,8 @@
 .cart-item button {
   margin-left: 10px;
 }
+
+.decrement-quantity-button, .increment-quantity-button {
+  width: 2rem;
+  font-size: 0.875rem;
+}
