@@ -1,9 +1,5 @@
 const form = document.getElementById("form")
 const shoppingCartUl = document.getElementById("cart")
-// const productNameInput = document.getElementById("product-name")
-// const productPriceInput = document.getElementById("product-price")
-// const addProductButton = document.getElementById("add-product")
-// const cart = document.getElementById("cart")
 const totalPriceSpan = document.getElementById("total-price")
 
 const shoppingCart = {
@@ -13,10 +9,12 @@ const shoppingCart = {
     let product = new Product(nameString, priceNumber)
     if (!product.validate()) {
       product = null
+
       form.reset()
     } else {
       product.createHTML()
       this.items.push(product)
+
       this.updateDisplay()
     }
   },
@@ -24,6 +22,7 @@ const shoppingCart = {
     product.domElement.remove()
     this.items.splice(this.items.indexOf(product), 1)
     product = null
+
     this.updateDisplay()
   },
   getProductById: function (productId) {
@@ -36,6 +35,7 @@ const shoppingCart = {
         accumulator + parseFloat(product.getTotalPrice()),
       startingTotal
     )
+
     return sum.toFixed(2)
   },
   updateDisplay: function () {
@@ -44,10 +44,10 @@ const shoppingCart = {
 
     // filter out products that already exist on the DOM
     const existingProductNames = Array.from(
-      this.domElement.querySelectorAll("product-name")
-    ).map((span) => span.textContent)
+      this.domElement.querySelectorAll(".product-name")
+    ).map((span) => span.textContent.toLowerCase())
     const newProducts = this.items.filter(
-      (product) => !existingProductNames.includes(product.name)
+      (product) => !existingProductNames.includes(product.name.toLowerCase())
     )
 
     // if there are new products, append them as children to this.domElement
@@ -94,10 +94,6 @@ class Product {
       this.totalPriceSpan.textContent = this.getTotalPrice()
 
       shoppingCart.updateDisplay()
-    } else {
-      this.setDecrementButton()
-
-      shoppingCart.updateDisplay()
     }
   }
 
@@ -118,7 +114,9 @@ class Product {
   validate() {
     this.name = this.name.trim()
     if (
-      shoppingCart.items.filter((item) => item.name === this.name).length > 0
+      shoppingCart.items.filter(
+        (item) => item.name.toLowerCase() === this.name.toLowerCase()
+      ).length > 0
     ) {
       return null
     } else {
@@ -133,8 +131,9 @@ class Product {
 
   createHTML() {
     const productListItem = document.createElement("li")
-    productListItem.dataset.id = this.id
     this.domElement = productListItem
+
+    productListItem.dataset.id = this.id
 
     productListItem.classList.add(
       "list-group-item",
@@ -229,24 +228,8 @@ class Product {
     this.decrementButton = productListItem.querySelector(
       ".decrement-quantity-button"
     )
-
-    return this.domElement
   }
 }
-
-// Function to update the total price
-// function updateTotalPrice(amount) {
-//   totalPrice += amount
-//   totalPriceSpan.textContent = totalPrice.toFixed(2)
-// }
-
-// Function to remove an item
-// function removeItem(event) {
-//   const item = event.target.closest("li")
-//   const price = parseFloat(item.dataset.price)
-//   updateTotalPrice(-price)
-//   item.remove()
-// }
 
 document.addEventListener("DOMContentLoaded", () => {
   form.addEventListener("submit", (event) => {
@@ -258,19 +241,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const productPrice = shoppingCartFormData.get("product-price")
 
     shoppingCart.addProduct(productName, productPrice)
+
     form.reset()
   })
 
   shoppingCartUl.addEventListener("click", (event) => {
     const shoppingCartListItem = event.target.closest("li")
+
     const productId = parseInt(shoppingCartListItem.dataset.id)
     const product = shoppingCart.getProductById(productId)
+
     if (event.target.classList.contains("product-remove-button")) {
       shoppingCart.removeProduct(product)
     }
+
     if (event.target.classList.contains("decrement-quantity-button")) {
       product.decrementQuantity()
     }
+
     if (event.target.classList.contains("increment-quantity-button")) {
       product.incrementQuantity()
     }
