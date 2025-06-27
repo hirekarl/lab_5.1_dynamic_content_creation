@@ -28,7 +28,7 @@ View deployed app at [chic-rolypoly-8dd3ae.netlify.app/dynamic-shopping-cart](ht
 > Basically, there was a lot of conversion between `Number`s (`float`s) and `String`s to be sure a) math is only being done to two decimal places (or at least float math is *rounded* to two decimal places), and that numerals always appear as decimal numbers to two decimal places to the user.
 
 3. How did you handle invalid input for product name or price?
-> Since we just went through JavaScript form validation today in class, I just used the built-in HTML validator attributes: `required` on the `product-name` input, and `step`, `min`, and `required` on the `product-price` input (which is also set to `type="number"` as a type constraint).
+> Since we just went through JavaScript form validation today in class, I just used the built-in HTML validator attributes: `required` on the `product-name` input, and `step`, `min`, and `required` on the `product-price` input (which is also set to `type="number"` as a type constraint). Invalid input simply resets the form.
 
 4. What challenges did you face when implementing the remove functionality?
 > I had more trouble with the increment and decrement buttons on the items in the list, to be honest. Originally, I filled in the buttons with Bootstrap Icons (namely, `bi-dash` and `bi-plus`), but the fact that they are implemented as `<i>` elements with classes, my `click` event listener wasn't registering their parent buttons' classes on `event.target`. At first, it just seemed like it only worked *sometimes*, then I realized it only worked if I clicked on the buttons outside of the center.
