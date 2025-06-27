@@ -9,7 +9,7 @@
 ## Submission Summary
 
 ### Viewer Instructions
-View deployed app at [](); view solution source below.
+View deployed app at [chic-rolypoly-8dd3ae.netlify.app/dynamic-shopping-cart](https://chic-rolypoly-8dd3ae.netlify.app/dynamic-shopping-cart/); view solution source below.
 
 ### Solution Source
 - **HTML**: [`dynamic-shopping-cart/index.html`](./dynamic-shopping-cart/index.html)
