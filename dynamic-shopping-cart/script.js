@@ -139,7 +139,7 @@ class Product {
       "list-group-item",
       "d-flex",
       "justify-content-between",
-      "align-items-start"
+      "align-items-center"
     )
 
     const productLeftContainer = document.createElement("div")
