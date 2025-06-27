@@ -67,10 +67,10 @@ const shoppingCart = {
 class Product {
   static nextId = 0
 
-  constructor(nameString, priceNumber) {
+  constructor(nameString, priceString) {
     this.id = Product.nextId++
     this.name = nameString
-    this.price = priceNumber
+    this.price = priceString
     this.quantity = 1
     this.domElement = null
     this.quantitySpan = null
