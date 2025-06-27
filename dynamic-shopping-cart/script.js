@@ -107,7 +107,7 @@ class Product {
   }
 
   getTotalPrice() {
-    const totalPrice = this.price * this.quantity
+    const totalPrice = parseFloat(this.price) * this.quantity
     return totalPrice.toFixed(2)
   }
 
