@@ -5,8 +5,8 @@ const totalPriceSpan = document.getElementById("total-price")
 const shoppingCart = {
   items: [],
   domElement: shoppingCartUl,
-  addProduct: function (nameString, priceNumber) {
-    let product = new Product(nameString, priceNumber)
+  addProduct: function (nameString, priceString) {
+    let product = new Product(nameString, priceString)
     if (!product.validate()) {
       product = null
 
