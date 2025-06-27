@@ -118,14 +118,14 @@ class Product {
         (item) => item.name.toLowerCase() === this.name.toLowerCase()
       ).length > 0
     ) {
-      return null
+      return false
     } else {
       try {
         this.price = parseFloat(this.price).toFixed(2)
       } catch (error) {
-        return null
+        return false
       }
-      return this
+      return true
     }
   }
 
