@@ -142,6 +142,8 @@ class Product {
       "align-items-center"
     )
 
+    // there's an opportunity here for templating with .cloneNode()
+
     const productLeftContainer = document.createElement("div")
     productLeftContainer.classList.add(
       "d-flex",
