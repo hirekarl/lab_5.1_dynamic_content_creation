@@ -1,6 +1,27 @@
+/*****************************************************************************
+ * Constants                                                                 *
+ *****************************************************************************/
+
 const form = document.getElementById("form")
 const shoppingCartUl = document.getElementById("cart")
 const totalPriceSpan = document.getElementById("total-price")
+
+/*****************************************************************************
+ * Main Behavior                                                             *
+ *****************************************************************************/
+
+document.addEventListener("DOMContentLoaded", main)
+
+function main() {
+  form.addEventListener("submit", (event) => handleForm(event))
+  shoppingCartUl.addEventListener("click", (event) =>
+    handleShoppingCartUl(event)
+  )
+}
+
+/*****************************************************************************
+ * Data Structures                                                           *
+ *****************************************************************************/
 
 const shoppingCart = {
   items: [],
@@ -233,36 +254,38 @@ class Product {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  form.addEventListener("submit", (event) => {
-    event.preventDefault()
+/*****************************************************************************
+ * Event Handlers                                                            *
+ *****************************************************************************/
 
-    const shoppingCartFormData = new FormData(form)
+function handleForm(event) {
+  event.preventDefault()
 
-    const productName = shoppingCartFormData.get("product-name")
-    const productPrice = shoppingCartFormData.get("product-price")
+  const shoppingCartFormData = new FormData(form)
 
-    shoppingCart.addProduct(productName, productPrice)
+  const productName = shoppingCartFormData.get("product-name")
+  const productPrice = shoppingCartFormData.get("product-price")
 
-    form.reset()
-  })
+  shoppingCart.addProduct(productName, productPrice)
 
-  shoppingCartUl.addEventListener("click", (event) => {
-    const shoppingCartListItem = event.target.closest("li")
+  form.reset()
+}
 
-    const productId = parseInt(shoppingCartListItem.dataset.id)
-    const product = shoppingCart.getProductById(productId)
+function handleShoppingCartUl(event) {
+  const shoppingCartListItem = event.target.closest("li")
 
-    if (event.target.classList.contains("product-remove-button")) {
-      shoppingCart.removeProduct(product)
-    }
+  const productId = parseInt(shoppingCartListItem.dataset.id)
+  const product = shoppingCart.getProductById(productId)
 
-    if (event.target.classList.contains("decrement-quantity-button")) {
-      product.decrementQuantity()
-    }
+  if (event.target.classList.contains("product-remove-button")) {
+    shoppingCart.removeProduct(product)
+  }
 
-    if (event.target.classList.contains("increment-quantity-button")) {
-      product.incrementQuantity()
-    }
-  })
-})
+  if (event.target.classList.contains("decrement-quantity-button")) {
+    product.decrementQuantity()
+  }
+
+  if (event.target.classList.contains("increment-quantity-button")) {
+    product.incrementQuantity()
+  }
+}
